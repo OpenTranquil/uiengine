@@ -1,0 +1,17 @@
+# tracer: nop
+#
+#                              _-----=> irqs-off
+#                             / _----=> need-resched
+#                            | / _---=> hardirq/softirq
+#                            || / _--=> preempt-depth
+#                            ||| /     delay
+#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+#              | |       |   ||||       |         |
+            test-1     [001] ...1 14190.100000: tracing_mark_write: B|96|function1
+            test-1     [001] ...1 14190.110000: tracing_mark_write: B|96|function2
+            test-1     [001] ...1 14190.120000: tracing_mark_write: B|96|function3
+            test-1     [001] ...1 14190.121000: tracing_mark_write: E
+            test-1     [001] ...1 14190.131000: tracing_mark_write: E
+            test-1     [001] ...1 14190.132000: tracing_mark_write: B|96|function4
+            test-1     [001] ...1 14190.140000: tracing_mark_write: E
+            test-1     [001] ...1 14190.141000: tracing_mark_write: E

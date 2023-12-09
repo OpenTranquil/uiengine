@@ -1,0 +1,22 @@
+{
+    "files.associations": {
+        "assert.h": "c",
+        "stdlib.h": "c",
+        "html_document.h": "c",
+        "__node_handle": "c",
+        "mem.h": "c",
+        "button.h": "c",
+        "renderer.h": "c",
+        "render_node.h": "c",
+        "backend_canvas.h": "c",
+        "ios": "c",
+        "sdl.h": "c",
+        "memory_resource": "c",
+        "complex": "c",
+        "chrono": "c",
+        "type.h": "c",
+        "sdl_ttf.h": "c",
+        "__locale": "c",
+        "cstring": "c"
+    }
+}
