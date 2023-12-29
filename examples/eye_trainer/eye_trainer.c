@@ -9,7 +9,7 @@
 #include "dlist.h"
 #include "renderer/component/circle.h"
 #include "renderer/component/text.h"
-#include "../../../src/engine/renderer/backend/sdl2/backend_sdl2.h"
+#include "../../engine/src/renderer/backend/sdl2/backend_sdl2.h"
 
 const char *winTitle = "EyeTrainer 1.0.1";
 #define BALL_MAX_RADIUS 50

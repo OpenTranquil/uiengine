@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "include/mem/mem.h"
-#include "include/web/html_document.h"
-#include "include/renderer/renderer.h"
-#include "include/renderer/component/button.h"
-#include "../../../src/engine/renderer/backend/sdl2/backend_sdl2.h"
+#include "mem/mem.h"
+#include "web/html_document.h"
+#include "renderer/renderer.h"
+#include "renderer/component/button.h"
+#include "../../engine/src/renderer/backend/sdl2/backend_sdl2.h"
 
 typedef struct Offset {
     int x_off;
