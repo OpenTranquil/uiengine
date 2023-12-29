@@ -21,6 +21,7 @@ typedef enum BallStatus {
 typedef struct Ball {
     Circle *circle;
     BallStatus status;
+    Position targetPos;
 } Ball;
 
 Ball *ball = NULL;
@@ -36,8 +37,8 @@ void onMouseMotion(struct Renderer *renderer, Event e) {
         uint32_t distance = sqrt(disx * disx + disy * disy);
         if (distance <= (ball->circle->renderNode.radius.topleft + player->circle->renderNode.radius.topleft)) {
             ball->status = BALL_DEADING;
-            ball->circle->renderNode.pos.x = rand() % renderer->getWindowWidth(renderer);
-            ball->circle->renderNode.pos.y = rand() % renderer->getWindowHeight(renderer);
+            ball->targetPos.x = rand() % renderer->getWindowWidth(renderer);
+            ball->targetPos.y = rand() % renderer->getWindowWidth(renderer);
         }
     }
 }
@@ -75,7 +76,8 @@ void ball_init(RenderNode *rootNode) {
     srand((unsigned int)time(NULL));
 }
 
-void update() {
+void update(struct Renderer *renderer) {
+    usleep(5000); // set fps ≈ 90
     if (ball->status == BALL_REROENING) {
         if (ball->circle->renderNode.radius.topleft < BALL_MAX_RADIUS) {
             ball->circle->renderNode.radius.topleft++;
@@ -88,6 +90,8 @@ void update() {
             ball->circle->renderNode.radius.topleft--;
         } else {
             ball->status = BALL_REROENING;
+            ball->circle->renderNode.pos.x = rand() % renderer->getWindowWidth(renderer);
+            ball->circle->renderNode.pos.y = rand() % renderer->getWindowHeight(renderer);
         }
     }
 }
@@ -111,7 +115,7 @@ int main(int argc, char* argv[]) {
 
     while (renderer->runningState != RENDERER_STATE_STOP) {
         renderer->processEvent(renderer);
-        update();
+        update(renderer);
         renderer->render(renderer);
     }
     renderer->destroy(renderer);
