@@ -94,6 +94,42 @@ void sdl2_backend_default_fill_rect(RenderBackend *sdl2, Position pos, Size size
     SDL_RenderFillRect(sdlRenderer, &rect);
 }
 
+void sdl2_backend_default_fill_circle(RenderBackend *sdl2, Position pos, Radius radius, Color color) {
+    SDL_SetRenderDrawColor(sdlRenderer, color.r, color.g, color.b, color.a);
+    int offsetx = 0;
+    int offsety = radius.topleft;
+    int d = radius.topleft - 1;
+    int status = 0;
+
+    while (offsety >= offsetx) {
+        status += SDL_RenderDrawLine(sdlRenderer, pos.x - offsety, pos.y + offsetx,
+                                     pos.x + offsety, pos.y + offsetx);
+        status += SDL_RenderDrawLine(sdlRenderer, pos.x - offsetx, pos.y + offsety,
+                                     pos.x + offsetx, pos.y + offsety);
+        status += SDL_RenderDrawLine(sdlRenderer, pos.x - offsetx, pos.y - offsety,
+                                     pos.x + offsetx, pos.y - offsety);
+        status += SDL_RenderDrawLine(sdlRenderer, pos.x - offsety, pos.y - offsetx,
+                                     pos.x + offsety, pos.y - offsetx);
+
+        if (status < 0) {
+            status = -1;
+            break;
+        }
+
+        if (d >= 2 * offsetx) {
+            d -= 2 * offsetx + 1;
+            offsetx +=1;
+        } else if (d < 2 * (radius.topleft - offsety)) {
+            d += 2 * offsety - 1;
+            offsety -= 1;
+        } else {
+            d += 2 * (offsety - offsetx - 1);
+            offsety -= 1;
+            offsetx += 1;
+        }
+    }
+}
+
 void sdl2_backend_default_init(struct RenderBackend *sdl2, const char *winTitle, uint32_t fullscreen, uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0 ) {
         printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -190,6 +226,7 @@ RenderBackend *backend_sdl2_create() {
     RenderBackend *sdl2  = (RenderBackend *)mem_alloc(sizeof(RenderBackend));
     sdl2->drawRect = sdl2_backend_default_draw_rect;
     sdl2->fillRect = sdl2_backend_default_fill_rect;
+    sdl2->fillCircle = sdl2_backend_default_fill_circle;
     sdl2->drawText = sdl2_backend_default_draw_text;
     sdl2->submit = sdl2_backend_default_submit;
     sdl2->clear = sdl2_backend_default_clear;

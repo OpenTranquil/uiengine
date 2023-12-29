@@ -15,6 +15,10 @@ void renderer_default_fill_rect(Renderer *renderer, Position pos, Size size, Col
     renderer->renderBackend->fillRect(renderer->renderBackend, pos, size, backgroundColor);
 }
 
+void renderer_default_fill_circle(struct Renderer *renderer, Position pos, Radius radius, Color color) {
+    renderer->renderBackend->fillCircle(renderer->renderBackend, pos, radius, color);
+}
+
 void renderer_default_register_backend(Renderer *renderer, RenderBackend *renderBackend) {
     renderer->renderBackend = renderBackend;
 }
@@ -196,6 +200,7 @@ Renderer *render_create() {
 
     renderer->drawRect = renderer_default_draw_rect;
     renderer->fillRect = renderer_default_fill_rect;
+    renderer->fillCircle = renderer_default_fill_circle;
     renderer->drawText = renderer_default_draw_text;
     return renderer;
 }

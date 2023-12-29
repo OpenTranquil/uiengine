@@ -12,16 +12,16 @@ int main(int argc, char* argv[]) {
     RenderNode *rootNode = (RenderNode*)mem_alloc(sizeof(RenderNode));
 
     Circle *circle = circle_create();
-    circle->renderNode.pos.x = 10;
-    circle->renderNode.pos.y = 10;
-    circle->renderNode.size.width = 20;
-    circle->renderNode.size.height = 20;
-    circle->renderNode.radius.topleft = 20;
-    circle->renderNode.radius.topright= 20;
-    circle->renderNode.radius.bottomleft = 20;
-    circle->renderNode.radius.bottomright = 20;
-    circle->renderNode.backgroundColor.r = 255;
-    circle->renderNode.backgroundColor.g = 0;
+    circle->renderNode.pos.x = 200;
+    circle->renderNode.pos.y = 200;
+    circle->renderNode.size.width = 80;
+    circle->renderNode.size.height = 80;
+    circle->renderNode.radius.topleft = 50;
+    circle->renderNode.radius.topright= 50;
+    circle->renderNode.radius.bottomleft = 50;
+    circle->renderNode.radius.bottomright = 50;
+    circle->renderNode.backgroundColor.r = 0;
+    circle->renderNode.backgroundColor.g = 255;
     circle->renderNode.backgroundColor.b = 0;
     circle->renderNode.backgroundColor.a = 0;
 

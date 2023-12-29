@@ -5,7 +5,7 @@
 
 void circle_default_render(RenderNode *renderNode, Renderer *renderer) {
     Circle *circle = ContainerOf(renderNode, Circle, renderNode);
-    renderer->fillRect(renderer, circle->renderNode.pos, circle->renderNode.size, circle->renderNode.backgroundColor);
+    renderer->fillCircle(renderer, circle->renderNode.pos, circle->renderNode.radius, circle->renderNode.backgroundColor);
     render_child(&circle->renderNode, renderer);
 }
 

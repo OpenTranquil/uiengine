@@ -13,6 +13,7 @@ typedef enum RendererState {
 
 typedef void (*RenderBackendDrawRect)(struct RenderBackend *, Position, Size, Color);
 typedef void (*RenderBackendDrawText)(struct RenderBackend *, Position, Size, Color, char *text);
+typedef void (*RenderBackendFillCircle)(struct RenderBackend *backend, Position pos, Radius radius, Color color);
 typedef void (*RenderBackendInit)(struct RenderBackend *, const char *winTitle, uint32_t fullscreen, uint32_t x, uint32_t y, uint32_t width, uint32_t height);
 typedef void (*RenderBackendSubmit)(struct RenderBackend *);
 typedef void (*RenderBackendClear)(struct RenderBackend *);
@@ -26,6 +27,8 @@ typedef struct RenderBackend {
     RenderBackendPolling polling;
     RenderBackendDrawRect drawRect;
     RenderBackendDrawRect fillRect;
+    RenderBackendFillCircle fillCircle;
+
     RenderBackendDrawText drawText;
 
     RenderBackendGetScreenHeight getScreenHeight;
@@ -35,6 +38,7 @@ typedef struct RenderBackend {
 typedef void (*RendererRegisterBackend)(struct Renderer *, RenderBackend *);
 typedef void (*RendererSetRootRenderNode)(struct Renderer *, struct RenderNode *);
 typedef void (*RendererDrawRect)(struct Renderer *, Position, Size, Color);
+typedef void (*RendererFillCircle)(struct Renderer *, Position pos, Radius radius, Color color);
 typedef void (*RendererDrawText)(struct Renderer *, Position, Size, Color, char*);
 typedef void (*RendererRender)(struct Renderer *);
 typedef void (*RendererProcessEvent)(struct Renderer *);
@@ -69,6 +73,7 @@ typedef struct Renderer {
 
     RendererDrawRect drawRect;
     RendererDrawRect fillRect;
+    RendererFillCircle fillCircle;
     RendererDrawText drawText;
 } Renderer;
 
