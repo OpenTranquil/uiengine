@@ -70,7 +70,7 @@ void ball_init(RenderNode *rootNode) {
     text->renderNode.pos.x = 50;
     text->renderNode.pos.y = 0;
     text->renderNode.size.width = 300;
-    text->renderNode.size.height = 50;
+    text->renderNode.size.height = 60;
     text->renderNode.backgroundColor.r = 255;
     text->renderNode.backgroundColor.g = 255;
     text->renderNode.backgroundColor.b = 255;
