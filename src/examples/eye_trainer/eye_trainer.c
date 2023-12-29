@@ -8,6 +8,7 @@
 #include "renderer/renderer.h"
 #include "dlist.h"
 #include "renderer/component/circle.h"
+#include "renderer/component/text.h"
 #include "../../../src/engine/renderer/backend/sdl2/backend_sdl2.h"
 
 #define BALL_MAX_RADIUS 50
@@ -65,6 +66,18 @@ void ball_init(RenderNode *rootNode) {
 
     dlist_append_tail(&ballCircle->renderNode.node, &playerCircle->renderNode.node);
 
+    Text *text = text_create("EyeTrainer 1.0.1");
+    text->renderNode.pos.x = 50;
+    text->renderNode.pos.y = 0;
+    text->renderNode.size.width = 300;
+    text->renderNode.size.height = 50;
+    text->renderNode.backgroundColor.r = 255;
+    text->renderNode.backgroundColor.g = 255;
+    text->renderNode.backgroundColor.b = 255;
+    text->renderNode.backgroundColor.a = 150;
+
+    dlist_append_tail(&ballCircle->renderNode.node, &text->renderNode.node);
+
     ball = (Ball *)malloc(sizeof(Ball));
     ball->status = BALL_REROENING;
     ball->circle = ballCircle;
@@ -105,13 +118,25 @@ int main(int argc, char* argv[]) {
     renderer->registerBackend(renderer, sdl2);
     renderer->setRootRenderNode(renderer, rootNode);
 
-    const char *winTitle = "EyeTrainer";
+    const char *winTitle = "EyeTrainer 1.0.1";
     uint32_t x = 0;
     uint32_t y = 0;
     uint32_t width = 1024;
     uint32_t height = 960;
     renderer->init(renderer, winTitle, 1, x, y, width, height);
     renderer->onMouseMotion = &onMouseMotion;
+
+    Position waterarkPos;
+    waterarkPos.x = 100;
+    waterarkPos.y = 100;
+    Size watermarkSize;
+    watermarkSize.width = 300;
+    watermarkSize.height = 80;
+    Color watermarkColor;
+    watermarkColor.r = 255;
+    watermarkColor.g = 0;
+    watermarkColor.b = 0;
+    watermarkColor.a = 0;
 
     while (renderer->runningState != RENDERER_STATE_STOP) {
         renderer->processEvent(renderer);

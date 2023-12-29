@@ -9,6 +9,7 @@ COMMON_SRCS = src/engine/web/html_document.c	\
 	src/engine/renderer/render_node.c	\
 	src/engine/renderer/component/button.c	\
 	src/engine/renderer/component/circle.c	\
+	src/engine/renderer/component/text.c	\
 	src/engine/renderer/backend/sdl2/backend_sdl2.c
 
 CACULATOR_SRCS = src/examples/caculator/caculator.c $(COMMON_SRCS)
