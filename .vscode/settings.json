@@ -17,6 +17,8 @@
         "type.h": "c",
         "sdl_ttf.h": "c",
         "__locale": "c",
-        "cstring": "c"
+        "cstring": "c",
+        "stdio.h": "c",
+        "backend_sdl2.h": "c"
     }
 }
