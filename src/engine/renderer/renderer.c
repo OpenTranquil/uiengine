@@ -118,9 +118,13 @@ void renderer_default_process_event(Renderer *renderer) {
     Event e = renderer->renderBackend->polling(renderer->renderBackend);
     if (e.type == EVENT_EXIT) {
         renderer->runningState = RENDERER_STATE_STOP;
+    } else if (e.type == EVENT_MOUSE_MOTION) {
+        if (renderer->onMouseMotion != NULL) {
+            renderer->onMouseMotion(renderer, e);
+        }
+        renderer_teigger_mouse_event(renderer->rootNode, e);
     } else if (e.type == EVENT_MOUSE_LEFT_UP ||
-               e.type == EVENT_MOUSE_LEFT_DOWN ||
-               e.type == EVENT_MOUSE_MOTION) {
+               e.type == EVENT_MOUSE_LEFT_DOWN) {
         // Find Trigger RenderNode by ZIndex
         // FIXME: ZIndex is better
         renderer_teigger_mouse_event(renderer->rootNode, e);
@@ -192,6 +196,7 @@ Renderer *render_create() {
     renderer->processEvent = renderer_default_process_event;
     renderer->setRootRenderNode = renderer_default_set_root_render_node;
     renderer->destroy = renderer_default_destroy;
+    renderer->onMouseMotion = NULL;
 
     renderer->getWindowHeight = renderer_default_get_window_height;
     renderer->getWindowWidth = renderer_default_get_window_width;

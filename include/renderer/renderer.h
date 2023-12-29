@@ -47,6 +47,7 @@ typedef void (*RendererDestroy)(struct Renderer *);
 typedef void (*RendererDump)(struct Renderer *);
 typedef uint32_t (*RendererGetWindowWidth)(struct Renderer *);
 typedef uint32_t (*RendererGetWindowHeight)(struct Renderer *);
+typedef void (*RenderOnMouseMotion)(struct Renderer *, Event e);
 typedef struct Renderer {
     RendererState runningState;
 
@@ -60,6 +61,8 @@ typedef struct Renderer {
 
     RenderBackend *renderBackend;
     struct RenderNode *rootNode;
+
+    RenderOnMouseMotion onMouseMotion;
 
     RendererRegisterBackend registerBackend;
     RendererSetRootRenderNode setRootRenderNode;
