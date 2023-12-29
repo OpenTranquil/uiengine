@@ -25,6 +25,9 @@ typedef void (*RenderNodeOnCustomMouseHover)(struct RenderNode *, struct HtmlEle
 typedef struct RenderNode {
     Position pos;
     Size size;
+
+    Radius radius;
+
     Padding padding;
     Margin margin;
     Color foregroundColor;

@@ -6,7 +6,7 @@
 #include "include/web/html_document.h"
 #include "include/renderer/renderer.h"
 #include "include/renderer/component/button.h"
-#include "src/renderer/backend/sdl2/backend_sdl2.h"
+#include "../../../src/engine/renderer/backend/sdl2/backend_sdl2.h"
 
 HtmlDocument* document = NULL;
 
@@ -167,7 +167,12 @@ int main(int argc, char* argv[]) {
 
     renderer->dump(renderer);
 
-    renderer->init(renderer);
+    const char *winTitle = "计算器";
+    uint32_t x = 0;
+    uint32_t y = 0;
+    uint32_t width = 640;
+    uint32_t height = 480;
+    renderer->init(renderer, winTitle, 0, x, y, width, height);
     while (renderer->runningState != RENDERER_STATE_STOP) {
         renderer->processEvent(renderer);
         document->updateRender(document);

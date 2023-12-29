@@ -1,5 +1,5 @@
-#include "../../../../include/renderer/renderer.h"
-#include "../../../../include/mem/mem.h"
+#include "renderer/renderer.h"
+#include "mem/mem.h"
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -94,12 +94,12 @@ void sdl2_backend_default_fill_rect(RenderBackend *sdl2, Position pos, Size size
     SDL_RenderFillRect(sdlRenderer, &rect);
 }
 
-void sdl2_backend_default_init(struct RenderBackend *sdl2) {
+void sdl2_backend_default_init(struct RenderBackend *sdl2, const char *winTitle, uint32_t fullscreen, uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0 ) {
         printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return;
     }
-    gWindow = SDL_CreateWindow( "计算器", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+    gWindow = SDL_CreateWindow( winTitle, x, y, width, height, SDL_WINDOW_SHOWN );
     if (gWindow == NULL) {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return;
@@ -110,7 +110,9 @@ void sdl2_backend_default_init(struct RenderBackend *sdl2) {
         return;
     }
     SDL_RenderSetVSync(sdlRenderer, -1);
-
+    if (fullscreen) {
+        SDL_SetWindowFullscreen(gWindow, SDL_WINDOW_FULLSCREEN);
+    }
     if (TTF_Init() < 0) {
         printf("TTF int failed! SDL_Error: %s\n", SDL_GetError());
         return;
@@ -155,8 +157,12 @@ Event sdl2_backend_default_polling(RenderBackend *sdl2) {
         retE.leftMouseUp.x = e.button.x;
         retE.leftMouseUp.y = e.button.y;
     } else if (e.type == SDL_KEYDOWN) {
-        retE.type = EVENT_KEY_DOWN;
-        retE.keyboardDown.key = e.key.keysym.sym;
+        if (e.key.keysym.sym == SDLK_ESCAPE) {
+            retE.type = EVENT_EXIT;
+        } else {
+            retE.type = EVENT_KEY_DOWN;
+            retE.keyboardDown.key = e.key.keysym.sym;
+        }
     } else if (e.type == SDL_KEYUP) {
         retE.type = EVENT_KEY_UP;
         retE.keyboardUp.key = e.key.keysym.sym;
@@ -164,6 +170,20 @@ Event sdl2_backend_default_polling(RenderBackend *sdl2) {
         retE.type = EVENT_UNKNOWN;
     }
     return retE;
+}
+
+uint32_t sdl2_backend_default_get_screen_height(RenderBackend *sdl2) {
+    uint32_t width = 0;
+    uint32_t height = 0;
+    SDL_GetRendererOutputSize(sdlRenderer, &width, &height);
+    return height;
+}
+
+uint32_t sdl2_backend_default_get_screen_width(RenderBackend *sdl2) {
+    uint32_t width = 0;
+    uint32_t height = 0;
+    SDL_GetRendererOutputSize(sdlRenderer, &width, &height);
+    return width;
 }
 
 RenderBackend *backend_sdl2_create() {
@@ -175,5 +195,8 @@ RenderBackend *backend_sdl2_create() {
     sdl2->clear = sdl2_backend_default_clear;
     sdl2->polling = sdl2_backend_default_polling;
     sdl2->init = sdl2_backend_default_init;
+
+    sdl2->getScreenHeight = sdl2_backend_default_get_screen_height;
+    sdl2->getScreenWidth = sdl2_backend_default_get_screen_width;
     return sdl2;
 }

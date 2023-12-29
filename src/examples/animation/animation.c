@@ -5,7 +5,7 @@
 #include "include/web/html_document.h"
 #include "include/renderer/renderer.h"
 #include "include/renderer/component/button.h"
-#include "src/renderer/backend/sdl2/backend_sdl2.h"
+#include "../../../src/engine/renderer/backend/sdl2/backend_sdl2.h"
 
 typedef struct Offset {
     int x_off;
@@ -92,7 +92,13 @@ int main(int argc, char* argv[]) {
     RenderBackend* sdl2 = backend_sdl2_create();
     renderer->registerBackend(renderer, sdl2);
     renderer->setRootRenderNode(renderer, rootNode);
-    renderer->init(renderer);
+
+    const char *winTitle = "animation";
+    uint32_t x = 0;
+    uint32_t y = 0;
+    uint32_t width = 1024;
+    uint32_t height = 960;
+    renderer->init(renderer, winTitle, 1, x, y, width, height);
 
     while (renderer->runningState != RENDERER_STATE_STOP) {
         renderer->processEvent(renderer);
@@ -108,10 +114,10 @@ int main(int argc, char* argv[]) {
                 inner = inner->right;
             }
 
-            if ((rNode->pos.x + rNode->size.width >= 640) || (rNode->pos.x <= 0)) {
+            if ((rNode->pos.x + rNode->size.width >= renderer->getWindowWidth(renderer)) || (rNode->pos.x <= 0)) {
                 offsets[index].x_off = -offsets[index].x_off;
             }
-            if ((rNode->pos.y + rNode->size.height >= 480) || (rNode->pos.y <= 0)) {
+            if ((rNode->pos.y + rNode->size.height >= renderer->getWindowHeight(renderer)) || (rNode->pos.y <= 0)) {
                 offsets[index].y_off = -offsets[index].y_off;
             }
             rNode->pos.x += offsets[index].x_off;

@@ -1,6 +1,6 @@
-#include "../../include/renderer/renderer.h"
-#include "../../include/renderer/render_node.h"
-#include "../../include/mem/mem.h"
+#include "renderer/renderer.h"
+#include "renderer/render_node.h"
+#include "mem/mem.h"
 #include <stdio.h>
 
 void renderer_default_draw_rect(Renderer *renderer, Position pos, Size size, Color backgroundColor) {
@@ -33,12 +33,16 @@ void renderer_default_render(struct Renderer *renderer) {
     renderer->renderBackend->submit(renderer->renderBackend);
 }
 
-void renderer_default_init(struct Renderer *renderer) {
+void renderer_default_init(struct Renderer *renderer, const char *winTitle, uint32_t fullscreen, uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
     if (renderer->renderBackend == NULL) {
         printf("render should register a backend first!\n");
         return;
     }
-    renderer->renderBackend->init(renderer->renderBackend);
+    renderer->windowFullscreen = fullscreen;
+    renderer->windowHeight = height;
+    renderer->windowWidth = width;
+
+    renderer->renderBackend->init(renderer->renderBackend, winTitle, fullscreen, x, y, width, height);
     renderer->runningState = RENDERER_STATE_RUNNING;
 }
 
@@ -56,6 +60,9 @@ void renderer_teigger_mouse_event(RenderNode *renderNode, Event e) {
         RenderNode *elem = ContainerOf(node, RenderNode, node);
         renderer_teigger_mouse_event(elem, e);
         node = node->right;
+    }
+    if (renderNode->dom == NULL) {
+        return;
     }
     if (renderNode->dom->type != HTML_ELEMENT_TYPE_DOM) {
         return;
@@ -159,6 +166,20 @@ void renderer_default_dump(Renderer *renderer) {
     renderer_dump_node(-1, "", renderer->rootNode);
 }
 
+uint32_t renderer_default_get_window_height(Renderer *renderer) {
+    if (renderer->windowFullscreen) {
+        return renderer->renderBackend->getScreenHeight(renderer->renderBackend);
+    }
+    return renderer->windowHeight;
+}
+
+uint32_t renderer_default_get_window_width(Renderer *renderer) {
+    if (renderer->windowFullscreen) {
+        return renderer->renderBackend->getScreenWidth(renderer->renderBackend);
+    }
+    return renderer->windowWidth;
+}
+
 Renderer *render_create() {
     Renderer *renderer = (Renderer *)mem_alloc(sizeof(Renderer));
     renderer->registerBackend = renderer_default_register_backend;
@@ -167,6 +188,9 @@ Renderer *render_create() {
     renderer->processEvent = renderer_default_process_event;
     renderer->setRootRenderNode = renderer_default_set_root_render_node;
     renderer->destroy = renderer_default_destroy;
+
+    renderer->getWindowHeight = renderer_default_get_window_height;
+    renderer->getWindowWidth = renderer_default_get_window_width;
 
     renderer->dump = renderer_default_dump;
 

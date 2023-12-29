@@ -1,7 +1,7 @@
-#include "../../include/web/html_document.h"
-#include "../../include/mem/mem.h"
-#include "../../include/assert.h"
-#include "../../include/renderer/component/button.h"
+#include "web/html_document.h"
+#include "mem/mem.h"
+#include "assert.h"
+#include "renderer/component/button.h"
 
 const char *ElementTypeName[HTML_ELEMENT_TYPE_MAX] = {"dom", "text"};
 

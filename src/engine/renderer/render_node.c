@@ -1,4 +1,4 @@
-#include "../../include/renderer/render_node.h"
+#include "renderer/render_node.h"
 #include <stdio.h>
 
 void render_child(RenderNode *renderNode, Renderer *renderer) {

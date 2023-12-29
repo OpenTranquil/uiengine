@@ -31,6 +31,13 @@ typedef struct Margin {
     uint32_t bottom;
 } Margin;
 
+typedef struct Radius {
+    uint32_t topleft;
+    uint32_t topright;
+    uint32_t bottomleft;
+    uint32_t bottomright;
+} Radius;
+
 typedef struct Color {
     uint8_t r;
     uint8_t g;

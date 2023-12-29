@@ -1,5 +1,5 @@
-#include "../../../include/renderer/component/button.h"
-#include "../../../include/mem/mem.h"
+#include "renderer/component/button.h"
+#include "mem/mem.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -7,7 +7,7 @@ void button_default_render(RenderNode *renderNode, Renderer *renderer) {
     Button *button = ContainerOf(renderNode, Button, renderNode);
     renderer->fillRect(renderer, button->renderNode.pos, button->renderNode.size, button->renderNode.backgroundColor);
     renderer->drawRect(renderer, button->renderNode.pos, button->renderNode.size, button->renderNode.borderColor);
-    if ((renderNode->dom->type == HTML_ELEMENT_TYPE_DOM) && 
+    if ((renderNode->dom != NULL) && (renderNode->dom->type == HTML_ELEMENT_TYPE_DOM) && 
         (strcmp(renderNode->dom->dom.tag, "button") == 0)){
         HtmlElement *e = renderNode->dom->dom.childrens;
         if ((e != NULL) && (e->type == HTML_ELEMENT_TYPE_CONTENT)) {
@@ -28,21 +28,30 @@ void button_default_render(RenderNode *renderNode, Renderer *renderer) {
 }
 
 void button_default_onclick(RenderNode *renderNode, Event e) {
+    if (renderNode->dom == NULL) {
+        return;
+    }
     if (renderNode->onCustomClick != NULL) {
         renderNode->onCustomClick(renderNode->dom);
     }
 }
 
 void button_default_onmouse_down(RenderNode *renderNode, Event e) {
+    if (renderNode->dom == NULL) {
+        return;
+    }
     renderNode->backgroundColor.r -= 20;
     renderNode->backgroundColor.g -= 20;
     renderNode->backgroundColor.b -= 20;
-    if (renderNode->onCustomMouseDown != NULL) {
+    if ((renderNode->dom != NULL) && renderNode->onCustomMouseDown != NULL) {
         renderNode->onCustomMouseDown(renderNode, renderNode->dom);
     }
 }
 
 void button_default_onmouse_up(RenderNode *renderNode, Event e) {
+    if (renderNode->dom == NULL) {
+        return;
+    }
     renderNode->backgroundColor.r += 20;
     renderNode->backgroundColor.g += 20;
     renderNode->backgroundColor.b += 20;
@@ -52,6 +61,9 @@ void button_default_onmouse_up(RenderNode *renderNode, Event e) {
 }
 
 void button_default_onmouse_enter(RenderNode *renderNode, Event e) {
+    if (renderNode->dom == NULL) {
+        return;
+    }
     if (renderNode->onCustomMouseEnter != NULL) {
         renderNode->onCustomMouseEnter(renderNode, renderNode->dom);
     }
@@ -61,12 +73,18 @@ void button_default_onmouse_enter(RenderNode *renderNode, Event e) {
 }
 
 void button_default_onmouse_leave(RenderNode *renderNode, Event e) {
+    if (renderNode->dom == NULL) {
+        return;
+    }
     if (renderNode->onCustomMouseLeave != NULL) {
         renderNode->onCustomMouseLeave(renderNode, renderNode->dom);
     }
 }
 
 void button_default_onmouse_hover(RenderNode *renderNode, Event e) {
+    if (renderNode->dom == NULL) {
+        return;
+    }
     if (renderNode->onCustomMouseHover != NULL) {
         renderNode->onCustomMouseHover(renderNode, renderNode->dom);
     }

@@ -1,5 +1,5 @@
-#include "../../include/mem/mem.h"
-#include "../../include/assert.h"
+#include "mem/mem.h"
+#include "assert.h"
 #include <stdlib.h>
 
 static size_t mem_usage = 0;

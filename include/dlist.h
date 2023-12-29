@@ -28,4 +28,16 @@ static void inline dlist_insert(DListNode *head, DListNode *node) {
     }
 }
 
+static inline void dlist_append_tail(struct DListNode *dist, struct DListNode *item) {
+	struct DListNode *node = dist;
+	if (node == NULL) {
+		return;
+	}
+	while (node->right != NULL) {
+		node = node->right;
+	}
+	node->right = item;
+	item->left = node;
+}
+
 #endif /* __UIENGINE_DLIST_H__ */
