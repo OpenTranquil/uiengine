@@ -40,4 +40,4 @@ runTest: test
 
 .PHONY: clean
 clean:
-	rm demo test demo_render
+	rm caculator test animation eye_trainer
