@@ -135,7 +135,7 @@ void sdl2_backend_default_init(struct RenderBackend *sdl2, const char *winTitle,
         printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return;
     }
-    gWindow = SDL_CreateWindow( winTitle, x, y, width, height, SDL_WINDOW_SHOWN );
+    gWindow = SDL_CreateWindow(winTitle, x, y, width, height, SDL_WINDOW_SHOWN );
     if (gWindow == NULL) {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return;
