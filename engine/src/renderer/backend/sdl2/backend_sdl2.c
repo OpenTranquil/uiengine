@@ -166,7 +166,7 @@ void sdl2_backend_default_submit(RenderBackend *sdl2) {
 }
 
 void sdl2_backend_default_clear(RenderBackend *sdl2) {
-    SDL_SetRenderDrawColor(sdlRenderer, 0, 0, 0, 0);
+    SDL_SetRenderDrawColor(sdlRenderer, 0xfe, 0xfe, 0xfe, 0);
     SDL_RenderClear(sdlRenderer);
 }
 
