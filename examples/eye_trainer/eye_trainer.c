@@ -134,7 +134,6 @@ void ball_init(struct Renderer *renderer, RenderNode *rootNode) {
     playerCircle->renderNode.backgroundColor.g = 0;
     playerCircle->renderNode.backgroundColor.b = 255;
     playerCircle->renderNode.backgroundColor.a = 0;
-    dlist_append_tail(&ballCircle->renderNode.node, &playerCircle->renderNode.node);
 
     player->head = (Ball *)malloc(sizeof(Ball));
     player->head->status = BALL_ALIVE;
@@ -142,7 +141,7 @@ void ball_init(struct Renderer *renderer, RenderNode *rootNode) {
 
     player->tails[0] = player->head;
 
-    DListNode *node = &playerCircle->renderNode.node;
+    DListNode *node = &ballCircle->renderNode.node;
     for (size_t i = 1; i < TAIL_NUMS; i++) {
         Circle *tmp = circle_create();
         tmp->renderNode.pos.x = player->tails[i - 1]->circle->renderNode.pos.x - 10;
@@ -161,6 +160,7 @@ void ball_init(struct Renderer *renderer, RenderNode *rootNode) {
         tmpB->circle = tmp;
         player->tails[i] = tmpB;
     }
+    dlist_append_tail(node, &playerCircle->renderNode.node);
 
     srand((unsigned int)time(NULL));
 }
