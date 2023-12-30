@@ -102,13 +102,24 @@ void ball_init(struct Renderer *renderer, RenderNode *rootNode) {
     Text *text = text_create(winTitle);
     text->renderNode.pos.x = 10;
     text->renderNode.pos.y = 0;
-    text->renderNode.size.width = 300;
-    text->renderNode.size.height = 60;
-    text->renderNode.backgroundColor.r = 0xc0;
-    text->renderNode.backgroundColor.g = 0xc0;
-    text->renderNode.backgroundColor.b = 0xc0;
+    text->renderNode.size.width = 200;
+    text->renderNode.size.height = 30;
+    text->renderNode.backgroundColor.r = 0x0;
+    text->renderNode.backgroundColor.g = 0x0;
+    text->renderNode.backgroundColor.b = 0x0;
     text->renderNode.backgroundColor.a = 0;
     dlist_append_tail(&rightBoard->renderNode.node, &text->renderNode.node);
+
+    Text *textMode = text_create("Horizontal Saccade");
+    textMode->renderNode.pos.x = renderer->getWindowWidth(renderer) - 230;
+    textMode->renderNode.pos.y = 0;
+    textMode->renderNode.size.width = 220;
+    textMode->renderNode.size.height = 30;
+    textMode->renderNode.backgroundColor.r = 0x0;
+    textMode->renderNode.backgroundColor.g = 0x0;
+    textMode->renderNode.backgroundColor.b = 0x0;
+    textMode->renderNode.backgroundColor.a = 0;
+    dlist_append_tail(&text->renderNode.node, &textMode->renderNode.node);
 
     Circle *ballCircle = circle_create();
     ballCircle->renderNode.pos.x = 200;
@@ -118,7 +129,7 @@ void ball_init(struct Renderer *renderer, RenderNode *rootNode) {
     ballCircle->renderNode.backgroundColor.g = 255;
     ballCircle->renderNode.backgroundColor.b = 0;
     ballCircle->renderNode.backgroundColor.a = 0;
-    dlist_append_tail(&text->renderNode.node, &ballCircle->renderNode.node);
+    dlist_append_tail(&textMode->renderNode.node, &ballCircle->renderNode.node);
 
     ball = (Ball *)malloc(sizeof(Ball));
     ball->status = BALL_REROENING;
@@ -127,8 +138,8 @@ void ball_init(struct Renderer *renderer, RenderNode *rootNode) {
     player = (Player*)malloc(sizeof(Player));
 
     Circle *playerCircle = circle_create();
-    playerCircle->renderNode.pos.x = 600;
-    playerCircle->renderNode.pos.y = 600;
+    playerCircle->renderNode.pos.x = renderer->getWindowWidth(renderer) / 2;
+    playerCircle->renderNode.pos.y = renderer->getWindowHeight(renderer) / 2;
     playerCircle->renderNode.radius.topleft = BALL_MAX_RADIUS;
     playerCircle->renderNode.backgroundColor.r = 0;
     playerCircle->renderNode.backgroundColor.g = 0;
@@ -144,8 +155,8 @@ void ball_init(struct Renderer *renderer, RenderNode *rootNode) {
     DListNode *node = &ballCircle->renderNode.node;
     for (size_t i = 1; i < TAIL_NUMS; i++) {
         Circle *tmp = circle_create();
-        tmp->renderNode.pos.x = 600;
-        tmp->renderNode.pos.y = 600;
+        tmp->renderNode.pos.x = renderer->getWindowWidth(renderer) / 2;
+        tmp->renderNode.pos.y = renderer->getWindowHeight(renderer) / 2;
         int32_t radius = BALL_MAX_RADIUS - i * 3;
         tmp->renderNode.radius.topleft = radius > 1 ? radius : 1;
         tmp->renderNode.backgroundColor.r = 0 + i * 20;
@@ -188,7 +199,7 @@ void update(struct Renderer *renderer) {
         uint32_t disx = abs(player->tails[i]->circle->renderNode.pos.x - player->tails[i]->targetPos.x);
         uint32_t disy = abs(player->tails[i]->circle->renderNode.pos.y - player->tails[i]->targetPos.y);
         uint32_t distance = sqrt(disx * disx + disy * disy);
-        uint32_t speed = distance / 8;
+        uint32_t speed = distance / 5;
         if (speed == 0) {
             speed = 1;
         }
