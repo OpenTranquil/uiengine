@@ -43,8 +43,8 @@ void onMouseMotion(struct Renderer *renderer, Event e) {
     player->head->circle->renderNode.pos.x = e.mouseMove.x;
     player->head->circle->renderNode.pos.y = e.mouseMove.y;
 
-    player->head->targetPos.x = e.mouseMove.x;
-    player->head->targetPos.y = e.mouseMove.y;
+    player->head->targetPos.x = e.mouseMove.x > 0 ? e.mouseMove.x : 1;
+    player->head->targetPos.y = e.mouseMove.y > 0 ? e.mouseMove.y : 1;;
 
     if (ball->status == BALL_ALIVE) {
         uint32_t disx = abs(ball->circle->renderNode.pos.x - player->head->circle->renderNode.pos.x);
@@ -144,7 +144,7 @@ void ball_init(struct Renderer *renderer, RenderNode *rootNode) {
     DListNode *node = &ballCircle->renderNode.node;
     for (size_t i = 1; i < TAIL_NUMS; i++) {
         Circle *tmp = circle_create();
-        tmp->renderNode.pos.x = player->tails[i - 1]->circle->renderNode.pos.x - 10;
+        tmp->renderNode.pos.x = 600;
         tmp->renderNode.pos.y = 600;
         int32_t radius = BALL_MAX_RADIUS - i * 3;
         tmp->renderNode.radius.topleft = radius > 1 ? radius : 1;
@@ -193,10 +193,18 @@ void update(struct Renderer *renderer) {
             speed = 1;
         }
         if (player->tails[i]->circle->renderNode.pos.x != player->tails[i]->targetPos.x) {
-            player->tails[i]->circle->renderNode.pos.x += (player->tails[i]->circle->renderNode.pos.x > player->tails[i]->targetPos.x ? -speed:speed);
+            int32_t step = (player->tails[i]->circle->renderNode.pos.x > player->tails[i]->targetPos.x ? -speed:speed);
+            if (step < 0 && abs(step) > player->tails[i]->circle->renderNode.pos.x) {
+                step = 1;
+            }
+            player->tails[i]->circle->renderNode.pos.x += step;
         }
         if (player->tails[i]->circle->renderNode.pos.y != player->tails[i]->targetPos.y) {
-            player->tails[i]->circle->renderNode.pos.y += (player->tails[i]->circle->renderNode.pos.y > player->tails[i]->targetPos.y ? -speed:speed);
+            int32_t step = (player->tails[i]->circle->renderNode.pos.y > player->tails[i]->targetPos.y ? -speed:speed);
+            if (step < 0 && abs(step) > player->tails[i]->circle->renderNode.pos.y) {
+                step = 1;
+            }
+            player->tails[i]->circle->renderNode.pos.y += step;
         }
     }
 
