@@ -44,8 +44,10 @@ void sdl_font_texutre_cache_set(Color color, char *text, SDL_Texture *fontTextur
     TextTexture *textTexture = (TextTexture *)mem_alloc(sizeof(TextTexture));
     INIT_DNODE(textTexture->node);
 
+    char *str = malloc(strlen(text) + 1);
+    strcpy(str, text);
     textTexture->color = color;
-    textTexture->text = text;
+    textTexture->text = str;
     textTexture->texture = fontTexture;
     if (textTextureCache == NULL) {
         textTextureCache = textTexture;

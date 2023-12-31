@@ -3,23 +3,37 @@
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
+#include <string.h>
 #include "mem/mem.h"
 #include "web/html_document.h"
 #include "renderer/renderer.h"
 #include "dlist.h"
+#include "utils.h"
 #include "renderer/component/button.h"
 #include "renderer/component/circle.h"
 #include "renderer/component/text.h"
 #include "../../engine/src/renderer/backend/sdl2/backend_sdl2.h"
 
-const char *winTitle = "EyeTrainer 1.0.1";
+const char *winTitle = "EyeTrainer 2.1.5";
+
+Text *textScore = NULL;
+static uint32_t score = 0;
+static char scoreStr[0xFF] = {0};
+
+Text *textTime = NULL;
+static uint32_t lastTime = 0;
+static char timeStr[0xFF] = {0};
+
 #define BALL_MAX_RADIUS 50
 #define TAIL_NUMS 12
+#define GAME_TIME 60
+
+static uint32_t startTime = 0;
 
 typedef enum BallStatus {
     BALL_ALIVE,
     BALL_DEADING,
-    BALL_REROENING,
+    BALL_RERORNING,
 } BallStatus;
 
 typedef struct Ball {
@@ -39,6 +53,23 @@ Player *player = NULL;
 static uint32_t rebornLeft = 0;
 
 uint32_t updateIndex = 1;
+
+void updateTime(struct Renderer *renderer) {
+    uint32_t curTime = (uint32_t)time(NULL);
+    lastTime = startTime + GAME_TIME - curTime;
+    itoa(lastTime, timeStr, 10);
+    textTime->renderNode.size.width = strlen(timeStr) * 15;
+    textTime->renderNode.pos.x = renderer->getWindowWidth(renderer) / 2 - textTime->renderNode.size.width / 2;
+    textTime->str = timeStr;
+}
+
+void updateScore(struct Renderer *renderer) {
+    itoa(score, scoreStr, 10);
+    textScore->renderNode.size.width = strlen(scoreStr) * 15;
+    textScore->renderNode.pos.x = renderer->getWindowWidth(renderer) / 2 - textScore->renderNode.size.width / 2;
+    textScore->str = scoreStr;
+}
+
 void onMouseMotion(struct Renderer *renderer, Event e) {
     player->head->circle->renderNode.pos.x = e.mouseMove.x;
     player->head->circle->renderNode.pos.y = e.mouseMove.y;
@@ -63,11 +94,14 @@ void onMouseMotion(struct Renderer *renderer, Event e) {
                 ball->targetPos.y = 200 + (rand() % boardHeight);
                 rebornLeft = 1;
             }
+
+            score += 100;
+            updateScore(renderer);
         }
     }
 }
 
-void ball_init(struct Renderer *renderer, RenderNode *rootNode) {
+void ballInit(struct Renderer *renderer, RenderNode *rootNode) {
     Button *leftBoard = button_create();
     leftBoard->renderNode.pos.x = 100;
     leftBoard->renderNode.pos.y = 100;
@@ -121,6 +155,32 @@ void ball_init(struct Renderer *renderer, RenderNode *rootNode) {
     textMode->renderNode.backgroundColor.a = 0;
     dlist_append_tail(&text->renderNode.node, &textMode->renderNode.node);
 
+    itoa(score, scoreStr, 10);
+    textScore = text_create(scoreStr);
+    textScore->renderNode.pos.x = renderer->getWindowWidth(renderer) / 2;
+    textScore->renderNode.pos.y = 40;
+    textScore->renderNode.size.width = strlen(scoreStr) * 30;
+    textScore->renderNode.size.height = 50;
+    textScore->renderNode.backgroundColor.r = 0x50;
+    textScore->renderNode.backgroundColor.g = 0xFF;
+    textScore->renderNode.backgroundColor.b = 0x0;
+    textScore->renderNode.backgroundColor.a = 0;
+    dlist_append_tail(&textMode->renderNode.node, &textScore->renderNode.node);
+
+    startTime = (unsigned int)time(NULL);
+    lastTime = GAME_TIME;
+    itoa(lastTime, timeStr, 10);
+    textTime = text_create(timeStr);
+    textTime->renderNode.pos.x = renderer->getWindowWidth(renderer) / 2;
+    textTime->renderNode.pos.y = 0;
+    textTime->renderNode.size.width = strlen(timeStr) * 15;
+    textTime->renderNode.size.height = 30;
+    textTime->renderNode.backgroundColor.r = 0x0;
+    textTime->renderNode.backgroundColor.g = 0x0;
+    textTime->renderNode.backgroundColor.b = 0x0;
+    textTime->renderNode.backgroundColor.a = 0;
+    dlist_append_tail(&textScore->renderNode.node, &textTime->renderNode.node);
+
     Circle *ballCircle = circle_create();
     ballCircle->renderNode.pos.x = 200;
     ballCircle->renderNode.pos.y = 200;
@@ -129,10 +189,10 @@ void ball_init(struct Renderer *renderer, RenderNode *rootNode) {
     ballCircle->renderNode.backgroundColor.g = 255;
     ballCircle->renderNode.backgroundColor.b = 0;
     ballCircle->renderNode.backgroundColor.a = 0;
-    dlist_append_tail(&textMode->renderNode.node, &ballCircle->renderNode.node);
+    dlist_append_tail(&textTime->renderNode.node, &ballCircle->renderNode.node);
 
     ball = (Ball *)malloc(sizeof(Ball));
-    ball->status = BALL_REROENING;
+    ball->status = BALL_RERORNING;
     ball->circle = ballCircle;
 
     player = (Player*)malloc(sizeof(Player));
@@ -159,8 +219,8 @@ void ball_init(struct Renderer *renderer, RenderNode *rootNode) {
         tmp->renderNode.pos.y = renderer->getWindowHeight(renderer) / 2;
         int32_t radius = BALL_MAX_RADIUS - i * 3;
         tmp->renderNode.radius.topleft = radius > 1 ? radius : 1;
-        tmp->renderNode.backgroundColor.r = 0 + i * 20;
-        tmp->renderNode.backgroundColor.g = 0;
+        tmp->renderNode.backgroundColor.r = 0 + i * 10;
+        tmp->renderNode.backgroundColor.g = 0 + i * 10;
         tmp->renderNode.backgroundColor.b = 255;
         tmp->renderNode.backgroundColor.a = 0;
         dlist_append_tail(node, &tmp->renderNode.node);
@@ -177,8 +237,8 @@ void ball_init(struct Renderer *renderer, RenderNode *rootNode) {
 }
 
 void update(struct Renderer *renderer) {
-    usleep(1000);
-    if (ball->status == BALL_REROENING) {
+    updateTime(renderer);
+    if (ball->status == BALL_RERORNING) {
         if (ball->circle->renderNode.radius.topleft < BALL_MAX_RADIUS) {
             ball->circle->renderNode.radius.topleft++;
         } else {
@@ -189,7 +249,7 @@ void update(struct Renderer *renderer) {
         if (ball->circle->renderNode.radius.topleft > 1) {
             ball->circle->renderNode.radius.topleft--;
         } else {
-            ball->status = BALL_REROENING;
+            ball->status = BALL_RERORNING;
             ball->circle->renderNode.pos.x = ball->targetPos.x;
             ball->circle->renderNode.pos.y = ball->targetPos.y;
         }
@@ -199,10 +259,10 @@ void update(struct Renderer *renderer) {
         uint32_t disx = abs(player->tails[i]->circle->renderNode.pos.x - player->tails[i]->targetPos.x);
         uint32_t disy = abs(player->tails[i]->circle->renderNode.pos.y - player->tails[i]->targetPos.y);
         uint32_t distance = sqrt(disx * disx + disy * disy);
-        uint32_t speed = distance / 5;
-        if (speed == 0) {
-            speed = 1;
-        }
+        uint32_t speed = distance / 4;
+        // if (speed == 0) {
+        //     speed = 1;
+        // }
         if (player->tails[i]->circle->renderNode.pos.x != player->tails[i]->targetPos.x) {
             int32_t step = (player->tails[i]->circle->renderNode.pos.x > player->tails[i]->targetPos.x ? -speed:speed);
             if (step < 0 && abs(step) > player->tails[i]->circle->renderNode.pos.x) {
@@ -240,7 +300,7 @@ int main(int argc, char* argv[]) {
     renderer->onMouseMotion = &onMouseMotion;
 
     RenderNode *rootNode = (RenderNode*)mem_alloc(sizeof(RenderNode));
-    ball_init(renderer, rootNode);
+    ballInit(renderer, rootNode);
     renderer->setRootRenderNode(renderer, rootNode);
 
     while (renderer->runningState != RENDERER_STATE_STOP) {
