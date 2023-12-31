@@ -205,6 +205,7 @@ void ballInit(struct Renderer *renderer, RenderNode *rootNode) {
     playerCircle->renderNode.backgroundColor.g = 0;
     playerCircle->renderNode.backgroundColor.b = 255;
     playerCircle->renderNode.backgroundColor.a = 0;
+    dlist_append_tail(&ballCircle->renderNode.node, &playerCircle->renderNode.node);
 
     player->head = (Ball *)malloc(sizeof(Ball));
     player->head->status = BALL_ALIVE;
@@ -212,15 +213,15 @@ void ballInit(struct Renderer *renderer, RenderNode *rootNode) {
 
     player->tails[0] = player->head;
 
-    DListNode *node = &ballCircle->renderNode.node;
+    DListNode *node = &playerCircle->renderNode.node;
     for (size_t i = 1; i < TAIL_NUMS; i++) {
         Circle *tmp = circle_create();
         tmp->renderNode.pos.x = renderer->getWindowWidth(renderer) / 2;
         tmp->renderNode.pos.y = renderer->getWindowHeight(renderer) / 2;
         int32_t radius = BALL_MAX_RADIUS - i * 3;
         tmp->renderNode.radius.topleft = radius > 1 ? radius : 1;
-        tmp->renderNode.backgroundColor.r = 0 + i * 10;
-        tmp->renderNode.backgroundColor.g = 0 + i * 10;
+        tmp->renderNode.backgroundColor.r = 0 + i * 15;
+        tmp->renderNode.backgroundColor.g = 0;
         tmp->renderNode.backgroundColor.b = 255;
         tmp->renderNode.backgroundColor.a = 0;
         dlist_append_tail(node, &tmp->renderNode.node);
@@ -231,7 +232,6 @@ void ballInit(struct Renderer *renderer, RenderNode *rootNode) {
         tmpB->circle = tmp;
         player->tails[i] = tmpB;
     }
-    dlist_append_tail(node, &playerCircle->renderNode.node);
 
     srand((unsigned int)time(NULL));
 }
@@ -259,10 +259,10 @@ void update(struct Renderer *renderer) {
         uint32_t disx = abs(player->tails[i]->circle->renderNode.pos.x - player->tails[i]->targetPos.x);
         uint32_t disy = abs(player->tails[i]->circle->renderNode.pos.y - player->tails[i]->targetPos.y);
         uint32_t distance = sqrt(disx * disx + disy * disy);
-        uint32_t speed = distance / 4;
-        // if (speed == 0) {
-        //     speed = 1;
-        // }
+        uint32_t speed = distance / 5;
+        if (speed == 0) {
+            speed = 1;
+        }
         if (player->tails[i]->circle->renderNode.pos.x != player->tails[i]->targetPos.x) {
             int32_t step = (player->tails[i]->circle->renderNode.pos.x > player->tails[i]->targetPos.x ? -speed:speed);
             if (step < 0 && abs(step) > player->tails[i]->circle->renderNode.pos.x) {
