@@ -147,6 +147,7 @@ void sdl2_backend_default_init(struct RenderBackend *sdl2, const char *winTitle,
         printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
         return;
     }
+    SDL_SetRenderDrawBlendMode(sdlRenderer, SDL_BLENDMODE_BLEND);
     SDL_RenderSetVSync(sdlRenderer, -1);
     if (fullscreen) {
         SDL_SetWindowFullscreen(gWindow, SDL_WINDOW_FULLSCREEN);
