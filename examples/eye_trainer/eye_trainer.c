@@ -143,6 +143,9 @@ void updateScore(struct Renderer *renderer) {
 }
 
 void onMouseMotion(struct Renderer *renderer, Event e) {
+    if (gameStatus != GAME_RUNNING) {
+        return;
+    }
     player->head->circle->renderNode.pos.x = e.mouseMove.x;
     player->head->circle->renderNode.pos.y = e.mouseMove.y;
 
