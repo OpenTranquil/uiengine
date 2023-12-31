@@ -26,7 +26,7 @@ static char timeStr[0xFF] = {0};
 
 #define BALL_MAX_RADIUS 50
 #define TAIL_NUMS 12
-#define GAME_TIME 10
+#define GAME_TIME 120
 
 static uint32_t startTime = 0;
 
