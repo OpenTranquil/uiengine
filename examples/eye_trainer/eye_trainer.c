@@ -76,7 +76,7 @@ void createOverBoard(struct Renderer *renderer) {
     overBoard->renderNode.pos.y = 0;
     overBoard->renderNode.size.width = 1;
     overBoard->renderNode.size.height = renderer->getWindowHeight(renderer);
-    overBoard->renderNode.backgroundColor.r = 0xFF;
+    overBoard->renderNode.backgroundColor.r = 0;
     overBoard->renderNode.backgroundColor.g = 0;
     overBoard->renderNode.backgroundColor.b = 0;
     overBoard->renderNode.backgroundColor.a = 0xFF;
@@ -86,10 +86,11 @@ void createOverBoard(struct Renderer *renderer) {
 }
 
 void createOverTexts(struct Renderer *renderer) {
-    overText = text_create("GameOver");
-    overText->renderNode.pos.x = renderer->getWindowWidth(renderer) / 2 - (70 * strlen("GameOver")) / 2;
+    char *timeover = "Time Over!";
+    overText = text_create(timeover);
+    overText->renderNode.pos.x = renderer->getWindowWidth(renderer) / 2 - (70 * strlen(timeover)) / 2;
     overText->renderNode.pos.y = renderer->getWindowHeight(renderer) / 4;
-    overText->renderNode.size.width = 70 * strlen("GameOver");
+    overText->renderNode.size.width = 70 * strlen(timeover);
     overText->renderNode.size.height = 140;
     overText->renderNode.backgroundColor.r = 0xFF;
     overText->renderNode.backgroundColor.g = 0xFF;
@@ -103,9 +104,9 @@ void createOverTexts(struct Renderer *renderer) {
     overScoreText->renderNode.pos.y = renderer->getWindowHeight(renderer) / 2;
     overScoreText->renderNode.size.width = 50 * strlen(scoreStr);
     overScoreText->renderNode.size.height = 100;
-    overScoreText->renderNode.backgroundColor.r = 0x00;
-    overScoreText->renderNode.backgroundColor.g = 0xFF;
-    overScoreText->renderNode.backgroundColor.b = 0x00;
+    overScoreText->renderNode.backgroundColor.r = 0xff;
+    overScoreText->renderNode.backgroundColor.g = 0xff;
+    overScoreText->renderNode.backgroundColor.b = 0xff;
     overScoreText->renderNode.backgroundColor.a = 0xFF;
     dlist_append_tail(&overText->renderNode.node, &overScoreText->renderNode.node);
 
@@ -178,15 +179,10 @@ void ballInit(struct Renderer *renderer, RenderNode *rootNode) {
     leftBoard->renderNode.pos.y = 100;
     leftBoard->renderNode.size.width = renderer->getWindowWidth(renderer) / 2 - 200;
     leftBoard->renderNode.size.height = renderer->getWindowHeight(renderer) - 200;
-    leftBoard->renderNode.backgroundColor.r = 0xf2;
-    leftBoard->renderNode.backgroundColor.g = 0xf3;
-    leftBoard->renderNode.backgroundColor.b = 0xf4;
+    leftBoard->renderNode.backgroundColor.r = 0xfc;
+    leftBoard->renderNode.backgroundColor.g = 0xfc;
+    leftBoard->renderNode.backgroundColor.b = 0xfc;
     leftBoard->renderNode.backgroundColor.a = 255;
-    leftBoard->renderNode.borderColor.r = 0xEE;
-    leftBoard->renderNode.borderColor.g = 0xEE;
-    leftBoard->renderNode.borderColor.b = 0xEE;
-    leftBoard->renderNode.borderColor.a = 255;
-
     rootNode->children = &leftBoard->renderNode;
 
     Button *centerLine = button_create();
@@ -194,14 +190,10 @@ void ballInit(struct Renderer *renderer, RenderNode *rootNode) {
     centerLine->renderNode.pos.y = 100;
     centerLine->renderNode.size.width = 4;
     centerLine->renderNode.size.height = renderer->getWindowHeight(renderer) - 200;
-    centerLine->renderNode.backgroundColor.r = 0xf2;
-    centerLine->renderNode.backgroundColor.g = 0xf3;
-    centerLine->renderNode.backgroundColor.b = 0xf4;
+    centerLine->renderNode.backgroundColor.r = 0xfc;
+    centerLine->renderNode.backgroundColor.g = 0xfc;
+    centerLine->renderNode.backgroundColor.b = 0xfc;
     centerLine->renderNode.backgroundColor.a = 255;
-    centerLine->renderNode.borderColor.r = 0xFF;
-    centerLine->renderNode.borderColor.g = 0xFF;
-    centerLine->renderNode.borderColor.b = 0xFF;
-    centerLine->renderNode.borderColor.a = 255;
     dlist_append_tail(&leftBoard->renderNode.node, &centerLine->renderNode.node);
 
     Button *rightBoard = button_create();
@@ -209,14 +201,10 @@ void ballInit(struct Renderer *renderer, RenderNode *rootNode) {
     rightBoard->renderNode.pos.y = 100;
     rightBoard->renderNode.size.width = renderer->getWindowWidth(renderer) / 2 - 200;
     rightBoard->renderNode.size.height = renderer->getWindowHeight(renderer) - 200;
-    rightBoard->renderNode.backgroundColor.r = 0xf2;
-    rightBoard->renderNode.backgroundColor.g = 0xf3;
-    rightBoard->renderNode.backgroundColor.b = 0xf4;
+    rightBoard->renderNode.backgroundColor.r = 0xfc;
+    rightBoard->renderNode.backgroundColor.g = 0xfc;
+    rightBoard->renderNode.backgroundColor.b = 0xfc;
     rightBoard->renderNode.backgroundColor.a = 255;
-    rightBoard->renderNode.borderColor.r = 0xEE;
-    rightBoard->renderNode.borderColor.g = 0xEE;
-    rightBoard->renderNode.borderColor.b = 0xEE;
-    rightBoard->renderNode.borderColor.a = 255;
     dlist_append_tail(&centerLine->renderNode.node, &rightBoard->renderNode.node);
 
     Text *text = text_create(winTitle);
@@ -243,12 +231,12 @@ void ballInit(struct Renderer *renderer, RenderNode *rootNode) {
 
     itoa(score, scoreStr, 10);
     textScore = text_create(scoreStr);
-    textScore->renderNode.pos.x = renderer->getWindowWidth(renderer) / 2;
+    textScore->renderNode.pos.x = renderer->getWindowWidth(renderer) / 2 - (strlen(scoreStr) * 30) / 2;
     textScore->renderNode.pos.y = 40;
     textScore->renderNode.size.width = strlen(scoreStr) * 30;
     textScore->renderNode.size.height = 50;
-    textScore->renderNode.backgroundColor.r = 0x50;
-    textScore->renderNode.backgroundColor.g = 0xFF;
+    textScore->renderNode.backgroundColor.r = 0x0;
+    textScore->renderNode.backgroundColor.g = 0x0;
     textScore->renderNode.backgroundColor.b = 0x0;
     textScore->renderNode.backgroundColor.a = 255;
     dlist_append_tail(&textMode->renderNode.node, &textScore->renderNode.node);
