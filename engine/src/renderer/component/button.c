@@ -105,5 +105,7 @@ Button *button_create() {
     button->renderNode.onCustomMouseLeave = NULL;
     button->renderNode.onMouseHover = button_default_onmouse_hover;
     button->renderNode.onCustomMouseHover = NULL;
+    button->renderNode.children = NULL;
+    dlist_init(&button->renderNode.node);
     return button;
 }

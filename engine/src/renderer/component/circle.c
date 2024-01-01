@@ -44,5 +44,7 @@ Circle *circle_create() {
     circle->renderNode.onCustomMouseLeave = NULL;
     circle->renderNode.onMouseHover = circle_default_onmouse_hover;
     circle->renderNode.onCustomMouseHover = NULL;
+    circle->renderNode.children = NULL;
+    dlist_init(&circle->renderNode.node);
     return circle;
 }

@@ -41,5 +41,6 @@ Text *text_create(char *str) {
     text->renderNode.onMouseHover = text_default_onmouse_hover;
     text->renderNode.onCustomMouseHover = NULL;
     text->str = str;
+    dlist_init(&text->renderNode.node);
     return text;
 }

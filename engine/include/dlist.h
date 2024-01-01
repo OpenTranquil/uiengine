@@ -11,6 +11,11 @@ typedef struct DListNode {
     struct DListNode *right;
 } DListNode;
 
+static void inline dlist_init(DListNode *node) {
+    node->left = NULL;
+    node->right = NULL;
+}
+
 static void inline dlist_insert(DListNode *head, DListNode *node) {
     if ((head != NULL) && (node != NULL)) {
         if (head->right == NULL) {
