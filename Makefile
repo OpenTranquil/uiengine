@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-I./engine/include -I/opt/homebrew/Cellar/sdl2/2.26.5/include -I/opt/homebrew/Cellar/sdl2_ttf/2.20.2/include -g
+CFLAGS=-I./engine/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include -I/opt/homebrew/Cellar/sdl2_ttf/2.20.2/include -g
 
 LIB=-lSDL2 -lSDL2_ttf -lSDL2main `sdl2-config --cflags --libs` -lpthread
 

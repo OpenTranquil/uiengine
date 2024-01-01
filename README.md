@@ -1,19 +1,11 @@
 # uiengine
 
-##
+## 
 ```
 brew install sdl2
 brew install sdl2_ttf
 brew install sdl2_mixer
 ```
-
-```
-make demo
-./demo
-```
-
-## demo cacualtor
-![caculator](./snapshot.jpeg)
 
 ## UI & Renderer pipeline
 1:
